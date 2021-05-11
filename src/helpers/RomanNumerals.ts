@@ -6,6 +6,7 @@ export const ROMAN_HUNDRED = "C";
 export const ROMAN_FIVE_HUNDRED = "D";
 export const ROMAN_THOUSAND = "M";
 export const ROMAN_MAX = 3999;
+export const ROMAN_MAX_SEQUENTIAL_LETTERS = 3;
 
 interface RomanValues {
     [letter: string]: number;
@@ -14,7 +15,13 @@ interface RomanValues {
 const RomanNumerals = {
     toRoman: (decimal: number):string => {
         if (decimal > ROMAN_MAX) {
-            decimal = ROMAN_MAX;
+            throw new Error(`The maximum decimal number that can be converted to roman is ${ROMAN_MAX}`);
+        }
+        if (isNaN(decimal)) {
+            throw new Error('Can\'t convert NaN');
+        }
+        if (decimal < 0) {
+            throw new Error('Only positive numbers are allowed');
         }
         if (decimal === 0) {
             throw new Error('Can\'t convert zero');
@@ -78,12 +85,26 @@ const RomanNumerals = {
         let decimal = 0;
         roman.split('').forEach((romanLetter, idx, letters) => {
             let value = ROMAN_VALE[romanLetter];
+            const nextRomanLetterIdx = idx + 1;
+            const nextRomanLetter = letters[nextRomanLetterIdx];
 
+
+            if (value === undefined) {
+                throw new Error('Invalid Roman number. Unknown letter.');
+            } 
+            // Check if we have 4 letters in the row
+            if (nextRomanLetter && romanLetter.repeat(ROMAN_MAX_SEQUENTIAL_LETTERS) === letters.slice(nextRomanLetterIdx, nextRomanLetterIdx + ROMAN_MAX_SEQUENTIAL_LETTERS).join('')) {
+                throw new Error('Invalid Roman number. The maximum sequential letter exceeded.')
+            }
             // If next letter more significant that current - decrease the total value by value of current letter
-            if (letters[idx + 1] && (ROMAN_VALE[letters[idx + 1]] > value)) {
+            if (nextRomanLetter && (ROMAN_VALE[nextRomanLetter] > value)) {
                 decimal -= value;
             } else {
                 decimal += value;
+            }
+
+            if (decimal > ROMAN_MAX) {
+                throw new Error(`The maximum roman number that can be converted to decimal is ${RomanNumerals.toRoman(ROMAN_MAX)}`);
             }
         });
 

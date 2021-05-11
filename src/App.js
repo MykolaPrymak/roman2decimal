@@ -25,22 +25,35 @@ function App() {
   const onRomanChange = (roman) => {
     setRoman(roman);
     setRomanError('');
-    try {
-      const decimal = RomanNumerals.fromRoman(roman);
-      setDecimal(decimal);
-    } catch (e) {
-      setRomanError(e.toString());
+    setDecimalError('');
+
+    if (roman.length > 0) {
+      try {
+        const decimal = RomanNumerals.fromRoman(roman);
+        setDecimal(decimal);
+      } catch (e) {
+        setRomanError(e.toString());
+      }
+    } else {
+      setDecimal('');
     }
   }
 
   const onDecimalChange = (decimal) => {
     setDecimal(decimal);
+    setRomanError('');
     setDecimalError('');
-    try {
-      const roman = RomanNumerals.toRoman(decimal);
-      setRoman(roman);
-    } catch (e) {
-      setDecimalError(e.toString());
+    decimal = Number(decimal);
+
+    if (decimal !== 0) {
+      try {
+        const roman = RomanNumerals.toRoman(decimal);
+        setRoman(roman);
+      } catch (e) {
+        setDecimalError(e.toString());
+      }
+    } else {
+      setRoman('');
     }
   }
 
@@ -64,6 +77,7 @@ function App() {
               helperText={romanError}
               value={roman}
               onChange={evt => onRomanChange(evt.target.value)}
+              fullWidth
               label="Roman Number"
               variant="outlined" />
           </Grid>
@@ -75,6 +89,7 @@ function App() {
               helperText={decimalError}
               value={decimal}
               onChange={evt => onDecimalChange(evt.target.value)}
+              fullWidth
               label="Decimal Number"
               variant="outlined" />
           </Grid>
