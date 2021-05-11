@@ -62,9 +62,15 @@ describe('RomanNumerals', () => {
         [3999, "MMMCMXCIX"],
     ] as [number, string][];
 
-    it('toRoma', () => {
+    it('toRoman', () => {
         testScenarios.forEach(([decimal, roman]) => {
-            expect(RomanNumerals.toRoman(decimal)).toBe(roman)
+            expect(RomanNumerals.toRoman(decimal)).toBe(roman);
+        });
+    });
+
+    it('fromRoman', () => {
+        testScenarios.forEach(([decimal, roman]) => {
+            expect(RomanNumerals.fromRoman(roman)).toBe(decimal);
         });
     })
 });

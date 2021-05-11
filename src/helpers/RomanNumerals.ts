@@ -7,10 +7,17 @@ export const ROMAN_FIVE_HUNDRED = "D";
 export const ROMAN_THOUSAND = "M";
 export const ROMAN_MAX = 3999;
 
+interface RomanValues {
+    [letter: string]: number;
+ } 
+
 const RomanNumerals = {
     toRoman: (decimal: number):string => {
         if (decimal > ROMAN_MAX) {
             decimal = ROMAN_MAX;
+        }
+        if (decimal === 0) {
+            throw new Error('Can\'t convert zero');
         }
 
         const romans = [];
@@ -51,7 +58,34 @@ const RomanNumerals = {
     },
 
     fromRoman: (roman: string):number => {
-        return Number(roman);
+        if (roman.length === 0) {
+            throw new Error('Empty string');
+        }
+
+        // We will use value of Roman numbers to determine their order
+        const ROMAN_VALE = {
+            [ROMAN_ONE]: 1,
+            [ROMAN_FIVE]: 5,
+            [ROMAN_TEEN]: 10,
+            [ROMAN_FIFTY]: 50,
+            [ROMAN_HUNDRED]: 100,
+            [ROMAN_FIVE_HUNDRED]: 500,
+            [ROMAN_THOUSAND]: 1000,
+        } as RomanValues;
+
+        let decimal = 0;
+        roman.split('').forEach((romanLetter, idx, letters) => {
+            let value = ROMAN_VALE[romanLetter];
+
+            // If next letter more significant that current - decrease the total value by value of current letter
+            if (letters[idx + 1] && (ROMAN_VALE[letters[idx + 1]] > value)) {
+                decimal -= value;
+            } else {
+                decimal += value;
+            }
+        });
+
+        return decimal;
     }
 };
 
