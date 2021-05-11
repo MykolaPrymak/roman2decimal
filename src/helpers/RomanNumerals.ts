@@ -61,6 +61,8 @@ const RomanNumerals = {
         if (roman.length === 0) {
             throw new Error('Empty string');
         }
+        // Normalize input
+        roman = roman.toUpperCase();
 
         // We will use value of Roman numbers to determine their order
         const ROMAN_VALE = {
