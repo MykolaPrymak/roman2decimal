@@ -44,7 +44,7 @@ describe('RomanNumerals', () => {
         [92, "XCII"],
         [99, "XCIX"],
         [100, ROMAN_HUNDRED],
-        [178, "CLXXVII"],
+        [178, "CLXXVIII"],
         [200, "CC"],
         [300, "CCC"],
         [400, "CD"],
